@@ -1,85 +1,52 @@
 class Solution {
 public:
-int solve(int i,int j,int k,int &m,int &n,vector<vector<vector<int>>>&dp,vector<vector<int>>& grid)
-{
-   if(dp[i][j][k]!=-1)
-   {return dp[i][j][k];}
-    
-if(i==n)
-{ dp[i][j][k]=0;}
-else
-{
-    if(j==k)
-    {int a = INT_MIN, b = INT_MIN, c = INT_MIN, d = INT_MIN, e = INT_MIN, f = INT_MIN;
-        if(j>0)
-        {
-            if(k>0)
-            {a=solve(i+1,j-1,k-1,m,n,dp,grid);}
-            d=solve(i+1,j-1,k,m,n,dp,grid);
-            if(k<(m-1))
-            {e=solve(i+1,j-1,k+1,m,n,dp,grid);}
-        }
-        b=solve(i+1,j,k,m,n,dp,grid);
-        if(j<(m-1))
-        {    if(k<(m-1))
-            c=solve(i+1,j+1,k+1,m,n,dp,grid);
-            f=solve(i+1,j+1,k,m,n,dp,grid);
-        }
-        int abmax=max(a,b),cdmax=max(c,d),efmax=max(e,f);
-        abmax=max(abmax,cdmax);
-        dp[i][j][k]=grid[i][j]+max(abmax,efmax);
 
-    }
-    else
-    { 
-
-int a = INT_MIN, b = INT_MIN, c = INT_MIN, d = INT_MIN, e = INT_MIN, f = INT_MIN, g = INT_MIN, h = INT_MIN, v = INT_MIN;
-     if(j>0)
-     {
-        b=solve(i+1,j-1,k,m,n,dp,grid);
-        if(k>0)
-        {a=solve(i+1,j-1,k-1,m,n,dp,grid);}
-     if(k<(m-1))
-     {c=solve(i+1,j-1,k+1,m,n,dp,grid);}
-     }
-        
-       if(k>0)
-        { d=solve(i+1,j,k-1,m,n,dp,grid);}
-        
-         e=solve(i+1,j,k,m,n,dp,grid);
-         if(k<(m-1))
-        { f=solve(i+1,j,k+1,m,n,dp,grid);}
-        if(j<(m-1))
-        {
-            h=solve(i+1,j+1,k,m,n,dp,grid);
-            
-        if(k>0)
-        {g=solve(i+1,j+1,k-1,m,n,dp,grid);}
-     if(k<(m-1))
-     { v=solve(i+1,j+1,k+1,m,n,dp,grid);}
-        }
-        int abmax=max(a,b),cdmax=max(c,d),efmax=max(e,f),ghmax=max(g,h);
-         abmax=max(abmax,cdmax);
-         efmax=max(efmax,ghmax);
-        int atohmax=max(abmax,efmax);
-        dp[i][j][k]=grid[i][j]+grid[i][k]+max(atohmax,v);
-
-         
-         
-        
-    }
-}
-
-
-return dp[i][j][k];
-
-
-
-}
     int cherryPickup(vector<vector<int>>& grid) {
-        vector<vector<vector<int>>>dp(71,vector<vector<int>>(71,vector<int>(71,-1)));
-        int n=grid.size(),m=grid[0].size(),i=0,j=0,k=m-1;
-        return solve(i,j,k,m,n,dp,grid);
+        int n=grid.size(),m=grid[0].size();
+        vector<vector<vector<int>>>dp(n,vector<vector<int>>(m,vector<int>(m,-1)));
+        int i=n-1;
+        for(int j=0;j<m;j++)
+        {
+            for(int k=0;k<m;k++)
+            {
+                if(j!=k)
+                {dp[i][j][k]=grid[i][j]+grid[i][k];}
+                else
+                {dp[i][j][k]=grid[i][k];}
+            }
+        }
+
+        for(int i=n-2;i>=0;i--)
+        {
+            for(int j=0;j<m;j++)
+            {
+                for(int k=0;k<m;k++)
+                {int maxi=-1e8;
+                    for(int dj1=-1;dj1<=1;dj1++)
+                    {
+                        for(int dj2=-1;dj2<=1;dj2++)
+                        {
+                            int value=0;
+                            if(j==k)value=grid[i][j];
+                            else value=grid[i][j]+grid[i][k];
+                            if(j+dj1>=0&&j+dj1<m&&k+dj2>=0&&k+dj2<m)
+                           { value+=dp[i+1][j+dj1][k+dj2];}
+                           else
+                           {value=-1e8;}
+                            maxi=max(maxi,value);
+
+                        }
+                    }
+                   
+dp[i][j][k] = maxi;
+                }
+            }
+
+        }
+
+        
+        return dp[0][0][m-1];
+
         
     }
 };
