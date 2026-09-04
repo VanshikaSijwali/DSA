@@ -18,15 +18,15 @@ public:
         }
         int smallest=n+1;
         int maxi=nums[0];
-        suffmin[0]=maxi-suffmin[0];
-        if(suffmin[0]<=k)
+       
+        if(maxi-suffmin[0]<=k)
         {smallest=0;}
         for(int i=1;i<n;i++)
         {
             if(nums[i]>maxi)
             {maxi=nums[i];}
-            suffmin[i]=maxi-suffmin[i];
-            if(suffmin[i]<=k)
+            
+            if((maxi-suffmin[i])<=k)
             {
                 smallest=min(smallest,i);
 
