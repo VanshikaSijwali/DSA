@@ -11,24 +11,18 @@
  */
 class Solution {
 public:
-void solve(TreeNode* root)
-{
-    if(root==NULL)
-    {return;}
-    TreeNode*temp=root->right;
-    root->right=root->left;
-    root->left=NULL;
-    solve(root->right);
-    TreeNode*ptr=root;
-    while(ptr->right!=NULL)
-    {ptr=ptr->right;}
-    ptr->right=temp;
-    solve(temp);
+TreeNode*prev=NULL;
 
-}
     void flatten(TreeNode* root) {
+        if(root==NULL)
+        {return;}
         
-        solve(root);
+            flatten(root->right);
+            flatten(root->left);
+            root->right=prev;
+            root->left=NULL;
+            prev=root;
+        
         
         
     }
